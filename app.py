@@ -11,4 +11,4 @@ with gr.Blocks(title="Agent-RCA Backend") as demo:
 app = gr.mount_gradio_app(backend_app, demo, path="/")
 
 port = int(os.getenv("PORT", "7860"))
-uvicorn.run(app, host="0.0.0.0", port=port) where to paste this
+uvicorn.run(app, host="0.0.0.0", port=port)
