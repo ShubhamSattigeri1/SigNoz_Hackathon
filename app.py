@@ -1,17 +1,16 @@
 import os
 import gradio as gr
+import uvicorn
 
-from backend.main import app as backend_app
+from backend.main import app as fastapi_app
 
-demo = gr.Blocks(title="Agent-RCA Backend")
+def _make_blocks():
+    with gr.Blocks(title="Agent-RCA Backend") as demo:
+        gr.Markdown("### Agent Root-Cause Attribution")
+    return demo
 
-with demo:
-    gr.Markdown("### Agent Root-Cause Attribution")
-    gr.Markdown("API server is running.")
+app = gr.mount_gradio_app(fastapi_app, _make_blocks(), path="/")
 
-# Gradio 6.x: demo.app IS the internal FastAPI app already
-internal_app = demo.app
-for route in backend_app.routes:
-    internal_app.routes.append(route)
-for key, handler in backend_app.exception_handlers.items():
-    internal_app.exception_handlers[key] = handler
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", "7860"))
+    uvicorn.run(app, host="0.0.0.0", port=port)
