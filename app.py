@@ -1,15 +1,24 @@
 import os
 os.environ["GRADIO_SSR_MODE"] = "0"
 
-import uvicorn
+import threading
+import time
 import gradio as gr
 from backend.main import app as backend_app
 
 with gr.Blocks(title="Agent-RCA Backend") as demo:
     gr.Markdown("### Agent Root-Cause Attribution")
 
-original_launch = demo.launch
-def patched_launch(*args, **kwargs):
-    combined = gr.mount_gradio_app(backend_app, demo, path="/")
-    uvicorn.run(combined, host="0.0.0.0", port=int(os.getenv("PORT", "7860")))
-demo.launch = patched_launch
+combined = gr.mount_gradio_app(backend_app, demo, path="/")
+
+demo.launch = lambda *a, **kw: None
+
+import uvicorn
+port = int(os.getenv("PORT", "7860"))
+threading.Thread(target=uvicorn.run, args=(combined,), kwargs={"host": "0.0.0.0", "port": port}, daemon=True).start()
+
+try:
+    while True:
+        time.sleep(3600)
+except KeyboardInterrupt:
+    pass
