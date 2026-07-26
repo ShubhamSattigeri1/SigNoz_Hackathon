@@ -150,6 +150,14 @@ def diagnose_live(case_id: str):
         "used_fallback": used_fallback,
     }
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+@app.get("/api/health")
+def api_health():
+    return {"status": "ok"}
+
 FastAPIInstrumentor.instrument_app(app)
 
 if __name__ == "__main__":

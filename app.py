@@ -1,17 +1,15 @@
 import os
+os.environ["GRADIO_SSR_MODE"] = "0"
+
 import uvicorn
 import gradio as gr
+from backend.main import app as backend_app
 
-from backend.main import app as fastapi_app
-
-gr_app = gr.Blocks(title="Agent-RCA Backend")
-with gr_app:
+with gr.Blocks(title="Agent-RCA Backend") as demo:
     gr.Markdown("### Agent Root-Cause Attribution")
-    gr.Markdown("API server is running at `/api/`")
-    gr.Markdown("Connect your Vercel frontend with `VITE_API_BASE` set to this Space URL.")
 
-app = gr.mount_gradio_app(fastapi_app, gr_app, path="/")
-
-if __name__ == "__main__":
-    port = int(os.getenv("PORT", "7860"))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+original_launch = demo.launch
+def patched_launch(*args, **kwargs):
+    combined = gr.mount_gradio_app(backend_app, demo, path="/")
+    uvicorn.run(combined, host="0.0.0.0", port=int(os.getenv("PORT", "7860")))
+demo.launch = patched_launch
