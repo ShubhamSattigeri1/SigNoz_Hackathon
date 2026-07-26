@@ -10,8 +10,10 @@ with gr.Blocks(title="Agent-RCA Backend") as demo:
 
 combined = gr.mount_gradio_app(backend_app, demo, path="/")
 
-demo.launch = lambda *a, **kw: None
-
 import uvicorn
 port = int(os.getenv("PORT", "7860"))
-threading.Thread(target=uvicorn.run, args=(combined,), kwargs={"host": "0.0.0.0", "port": port}).start()
+thread = threading.Thread(target=uvicorn.run, args=(combined,), kwargs={"host": "0.0.0.0", "port": port})
+thread.start()
+
+# Block SDK's launch call forever so the process stays alive
+demo.launch = lambda *a, **kw: thread.join()
