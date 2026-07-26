@@ -1,0 +1,176 @@
+{
+  "case_pass": {
+    "question": "What is the daily UPI transfer limit?",
+    "is_correct": true,
+    "blame_scores": {},
+    "root_causes": [],
+    "explanation": null,
+    "trace": {
+      "search": {
+        "input": "question=What is the daily UPI transfer limit?, doc_override=None",
+        "output": {
+          "doc_id": "doc_upi",
+          "title": "UPI Transfer Limits",
+          "text": "Per-transaction UPI limit is ₹1,00,000. Daily cumulative UPI limit across all apps is ₹2,00,000 for verified accounts."
+        }
+      },
+      "tool": {
+        "input": "question=What is the daily UPI transfer limit?, doc_id=doc_upi, tool_override=None",
+        "output": {
+          "tool_name": "limit_lookup",
+          "tool_output": "Limit(s) found: per-transaction UPI limit is ₹1,00,000, daily cumulative UPI limit is ₹2,00,000"
+        }
+      },
+      "answer": {
+        "input": "question=What is the daily UPI transfer limit?, doc_id=doc_upi, tool_name=limit_lookup, inject_bug=False",
+        "output": "Limit(s) found: per-transaction UPI limit is ₹1,00,000, daily cumulative UPI limit is ₹2,00,000"
+      }
+    }
+  },
+  "case_bad_search": {
+    "question": "What is the daily UPI transfer limit?",
+    "is_correct": false,
+    "blame_scores": {
+      "search": 1.0,
+      "tool": 0.0,
+      "answer": 0.0
+    },
+    "root_causes": [
+      "search"
+    ],
+    "explanation": {
+      "search": "The search step returned a document about ATM"
+    },
+    "trace": {
+      "search": {
+        "input": "question=What is the daily UPI transfer limit?, doc_override=doc_atm",
+        "output": {
+          "doc_id": "doc_atm",
+          "title": "ATM Withdrawal Limits",
+          "text": "Savings account holders can withdraw up to ₹40,000 per day from ATMs, subject to a maximum of 5 free transactions per month at other-bank ATMs."
+        }
+      },
+      "tool": {
+        "input": "question=What is the daily UPI transfer limit?, doc_id=doc_atm, tool_override=None",
+        "output": {
+          "tool_name": "limit_lookup",
+          "tool_output": "Limit(s) found: ATM withdrawal limit is ₹40,000"
+        }
+      },
+      "answer": {
+        "input": "question=What is the daily UPI transfer limit?, doc_id=doc_atm, tool_name=limit_lookup, inject_bug=False",
+        "output": "Limit(s) found: ATM withdrawal limit is ₹40,000"
+      }
+    }
+  },
+  "case_bad_tool": {
+    "question": "What fee applies to an NEFT transfer under rupees 10000?",
+    "is_correct": false,
+    "blame_scores": {
+      "search": 0.0,
+      "tool": 1.0,
+      "answer": 0.0
+    },
+    "root_causes": [
+      "tool"
+    ],
+    "explanation": {
+      "tool": "Because the step called the wrong tool, it returned a “no penalty found” message instead of the fee details, so the pipeline"
+    },
+    "trace": {
+      "search": {
+        "input": "question=What fee applies to an NEFT transfer under rupees 10000?, doc_override=None",
+        "output": {
+          "doc_id": "doc_neft",
+          "title": "NEFT/RTGS Charges",
+          "text": "NEFT transfers below ₹10,000 incur no fee. RTGS is available only for transfers above ₹2,00,000 and incurs a flat fee of ₹25."
+        }
+      },
+      "tool": {
+        "input": "question=What fee applies to an NEFT transfer under rupees 10000?, doc_id=doc_neft, tool_override=penalty_calculator",
+        "output": {
+          "tool_name": "penalty_calculator",
+          "tool_output": "No specific penalty information found in document."
+        }
+      },
+      "answer": {
+        "input": "question=What fee applies to an NEFT transfer under rupees 10000?, doc_id=doc_neft, tool_name=penalty_calculator, inject_bug=False",
+        "output": "No specific penalty information found in document."
+      }
+    }
+  },
+  "case_bad_generation": {
+    "question": "What is the penalty for premature FD withdrawal?",
+    "is_correct": false,
+    "blame_scores": {
+      "search": 0.0,
+      "tool": 0.0,
+      "answer": 1.0
+    },
+    "root_causes": [
+      "answer"
+    ],
+    "explanation": {
+      "answer": "We need to explain why the step's output likely caused the wrong final answer. The step produced \"The penalty for premature FD withdrawal is 5%.\" But the correct answer should have been something else. The pipeline had a bug injection. The step's output likely caused the wrong final answer because it incorrectly stated the penalty percentage, leading the final answer to reflect that incorrect figure. The explanation should be 1-2 plain English sentences. Avoid certain words. So: \"The step"
+    },
+    "trace": {
+      "search": {
+        "input": "question=What is the penalty for premature FD withdrawal?, doc_override=None",
+        "output": {
+          "doc_id": "doc_fd",
+          "title": "Fixed Deposit Premature Withdrawal",
+          "text": "Premature withdrawal of a fixed deposit before maturity incurs a 1% penalty on the applicable interest rate."
+        }
+      },
+      "tool": {
+        "input": "question=What is the penalty for premature FD withdrawal?, doc_id=doc_fd, tool_override=None",
+        "output": {
+          "tool_name": "penalty_calculator",
+          "tool_output": "Penalty information: penalty of 1%"
+        }
+      },
+      "answer": {
+        "input": "question=What is the penalty for premature FD withdrawal?, doc_id=doc_fd, tool_name=penalty_calculator, inject_bug=True",
+        "output": "The penalty for premature FD withdrawal is 5%."
+      }
+    }
+  },
+  "case_ambiguous": {
+    "question": "What is the ATM withdrawal limit per day?",
+    "is_correct": false,
+    "blame_scores": {
+      "search": 0.5,
+      "tool": 0.5,
+      "answer": 0
+    },
+    "root_causes": [
+      "search",
+      "tool"
+    ],
+    "explanation": {
+      "search": "The search step returned a document about NEFT/RTGS",
+      "tool": "We need to explain why the step's output caused wrong final answer. The step produced fee_calculator output instead of limit_lookup. The pipeline was answering ATM withdrawal limit per day. The wrong tool output gave fee info, not limit. So the pipeline used wrong info leading to wrong answer. We need 1-2 plain English sentences. Avoid certain words. So: \"The step returned fee information instead of the ATM limit, so the pipeline used the wrong data and produced an incorrect"
+    },
+    "trace": {
+      "search": {
+        "input": "question=What is the ATM withdrawal limit per day?, doc_override=doc_neft",
+        "output": {
+          "doc_id": "doc_neft",
+          "title": "NEFT/RTGS Charges",
+          "text": "NEFT transfers below ₹10,000 incur no fee. RTGS is available only for transfers above ₹2,00,000 and incurs a flat fee of ₹25."
+        }
+      },
+      "tool": {
+        "input": "question=What is the ATM withdrawal limit per day?, doc_id=doc_neft, tool_override=fee_calculator",
+        "output": {
+          "tool_name": "fee_calculator",
+          "tool_output": "Fee information: NEFT transfers below ₹10,000 incur no fee; RTGS flat fee of ₹25; Fee of ₹25"
+        }
+      },
+      "answer": {
+        "input": "question=What is the ATM withdrawal limit per day?, doc_id=doc_neft, tool_name=fee_calculator, inject_bug=False",
+        "output": "Fee information: NEFT transfers below ₹10,000 incur no fee; RTGS flat fee of ₹25; Fee of ₹25"
+      }
+    }
+  }
+}

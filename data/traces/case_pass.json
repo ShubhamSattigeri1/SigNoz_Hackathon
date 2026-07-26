@@ -1,0 +1,27 @@
+{
+  "case_id": "case_pass",
+  "question": "What is the daily UPI transfer limit?",
+  "steps": {
+    "search": {
+      "input": "question=What is the daily UPI transfer limit?, doc_override=None",
+      "output": {
+        "doc_id": "doc_upi",
+        "title": "UPI Transfer Limits",
+        "text": "Per-transaction UPI limit is ₹1,00,000. Daily cumulative UPI limit across all apps is ₹2,00,000 for verified accounts."
+      }
+    },
+    "tool": {
+      "input": "question=What is the daily UPI transfer limit?, doc_id=doc_upi, tool_override=None",
+      "output": {
+        "tool_name": "limit_lookup",
+        "tool_output": "Limit(s) found: per-transaction UPI limit is ₹1,00,000, daily cumulative UPI limit is ₹2,00,000"
+      }
+    },
+    "answer": {
+      "input": "question=What is the daily UPI transfer limit?, doc_id=doc_upi, tool_name=limit_lookup, inject_bug=False",
+      "output": "Limit(s) found: per-transaction UPI limit is ₹1,00,000, daily cumulative UPI limit is ₹2,00,000"
+    }
+  },
+  "final_answer": "Limit(s) found: per-transaction UPI limit is ₹1,00,000, daily cumulative UPI limit is ₹2,00,000",
+  "is_correct": true
+}

@@ -1,0 +1,27 @@
+{
+  "case_id": "case_bad_search",
+  "question": "What is the daily UPI transfer limit?",
+  "steps": {
+    "search": {
+      "input": "question=What is the daily UPI transfer limit?, doc_override=doc_atm",
+      "output": {
+        "doc_id": "doc_atm",
+        "title": "ATM Withdrawal Limits",
+        "text": "Savings account holders can withdraw up to ₹40,000 per day from ATMs, subject to a maximum of 5 free transactions per month at other-bank ATMs."
+      }
+    },
+    "tool": {
+      "input": "question=What is the daily UPI transfer limit?, doc_id=doc_atm, tool_override=None",
+      "output": {
+        "tool_name": "limit_lookup",
+        "tool_output": "Limit(s) found: ATM withdrawal limit is ₹40,000"
+      }
+    },
+    "answer": {
+      "input": "question=What is the daily UPI transfer limit?, doc_id=doc_atm, tool_name=limit_lookup, inject_bug=False",
+      "output": "Limit(s) found: ATM withdrawal limit is ₹40,000"
+    }
+  },
+  "final_answer": "Limit(s) found: ATM withdrawal limit is ₹40,000",
+  "is_correct": false
+}

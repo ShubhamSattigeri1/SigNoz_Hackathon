@@ -1,0 +1,27 @@
+{
+  "case_id": "case_bad_generation",
+  "question": "What is the penalty for premature FD withdrawal?",
+  "steps": {
+    "search": {
+      "input": "question=What is the penalty for premature FD withdrawal?, doc_override=None",
+      "output": {
+        "doc_id": "doc_fd",
+        "title": "Fixed Deposit Premature Withdrawal",
+        "text": "Premature withdrawal of a fixed deposit before maturity incurs a 1% penalty on the applicable interest rate."
+      }
+    },
+    "tool": {
+      "input": "question=What is the penalty for premature FD withdrawal?, doc_id=doc_fd, tool_override=None",
+      "output": {
+        "tool_name": "penalty_calculator",
+        "tool_output": "Penalty information: penalty of 1%"
+      }
+    },
+    "answer": {
+      "input": "question=What is the penalty for premature FD withdrawal?, doc_id=doc_fd, tool_name=penalty_calculator, inject_bug=False",
+      "output": "Penalty information: penalty of 1%"
+    }
+  },
+  "final_answer": "Penalty information: penalty of 1%",
+  "is_correct": true
+}
