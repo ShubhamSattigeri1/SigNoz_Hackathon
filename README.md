@@ -79,24 +79,6 @@ The project is instrumented with OpenTelemetry to export traces to [SigNoz Cloud
 - Case selection (`ui.select_case`) with case_id attribute
 - Recompute button clicks (`ui.recompute_click`) with root_causes result
 
-### Setup
-
-1. Sign up at https://signoz.cloud and get an ingestion key
-2. Add the following to your `.env` file:
-   ```
-   SIGNOZ_ENDPOINT=https://ingest.us.signoz.cloud:443
-   SIGNOZ_INGESTION_KEY=your_ingestion_key_here
-   SIGNOZ_SERVICE_NAME=agent-rca-backend
-   ```
-3. Add `VITE_SIGNOZ_ENDPOINT` and `VITE_SIGNOZ_INGESTION_KEY` to the frontend:
-   - Either set them in `.env` (Vite picks up `VITE_` prefixed vars)
-   - Or create `frontend/.env` with:
-     ```
-     VITE_SIGNOZ_ENDPOINT=https://ingest.us.signoz.cloud:443
-     VITE_SIGNOZ_INGESTION_KEY=your_ingestion_key_here
-     ```
-
-Then start the app as usual. Traces will appear in SigNoz under the services `agent-rca-backend` and `agent-rca-frontend`.
 
 ## Test Cases
 
