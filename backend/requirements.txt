@@ -1,8 +1,7 @@
-fastapi==0.115.0
+fastapi==0.115.2
 uvicorn==0.30.6
 python-dotenv==1.0.1
 groq==0.15.0
-gradio==5.0.0
 opentelemetry-api==1.27.0
 opentelemetry-sdk==1.27.0
 opentelemetry-exporter-otlp-proto-grpc==1.27.0

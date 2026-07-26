@@ -1,16 +1,17 @@
 import os
-import threading
 import uvicorn
 import gradio as gr
 
-def run_api():
-    from backend.main import app
-    uvicorn.run(app, host="0.0.0.0", port=7860)
+from backend.main import app as fastapi_app
 
-threading.Thread(target=run_api, daemon=True).start()
-
-with gr.Blocks(title="Agent-RCA Backend") as demo:
+gr_app = gr.Blocks(title="Agent-RCA Backend")
+with gr_app:
     gr.Markdown("### Agent Root-Cause Attribution")
-    gr.Markdown("API server is running. Connect your Vercel frontend.")
+    gr.Markdown("API server is running at `/api/`")
+    gr.Markdown("Connect your Vercel frontend with `VITE_API_BASE` set to this Space URL.")
 
-demo.launch()
+app = gr.mount_gradio_app(fastapi_app, gr_app, path="/")
+
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", "7860"))
+    uvicorn.run(app, host="0.0.0.0", port=port)
