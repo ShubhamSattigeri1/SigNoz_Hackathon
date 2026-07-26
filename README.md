@@ -1,3 +1,15 @@
+---
+title: Agent Rca Backend
+emoji: 👁
+colorFrom: gray
+colorTo: green
+sdk: gradio
+sdk_version: 6.20.0
+python_version: '3.12'
+app_file: app.py
+pinned: false
+---
+
 # Agent Root-Cause Attribution System (Agent-RCA)
 
 A demo system that runs a toy 3-step AI pipeline, logs structured traces, and performs root-cause analysis via ablation swap testing.
@@ -88,15 +100,13 @@ The project is instrumented with OpenTelemetry to export traces to [SigNoz Cloud
    SIGNOZ_INGESTION_KEY=your_ingestion_key_here
    SIGNOZ_SERVICE_NAME=agent-rca-backend
    ```
-3. Add `VITE_SIGNOZ_ENDPOINT` and `VITE_SIGNOZ_INGESTION_KEY` to the frontend:
-   - Either set them in `.env` (Vite picks up `VITE_` prefixed vars)
-   - Or create `frontend/.env` with:
-     ```
-     VITE_SIGNOZ_ENDPOINT=https://ingest.us.signoz.cloud:443
-     VITE_SIGNOZ_INGESTION_KEY=your_ingestion_key_here
-     ```
+3. For the frontend, add to `frontend/.env`:
+   ```
+   VITE_SIGNOZ_ENDPOINT=https://ingest.us.signoz.cloud:443
+   VITE_SIGNOZ_INGESTION_KEY=your_ingestion_key_here
+   ```
 
-Then start the app as usual. Traces will appear in SigNoz under the services `agent-rca-backend` and `agent-rca-frontend`.
+Traces will appear in SigNoz under the services `agent-rca-backend` and `agent-rca-frontend`.
 
 ## Test Cases
 
