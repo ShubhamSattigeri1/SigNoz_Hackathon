@@ -11,7 +11,3 @@ with gr_app:
     gr.Markdown("Connect your Vercel frontend with `VITE_API_BASE` set to this Space URL.")
 
 app = gr.mount_gradio_app(fastapi_app, gr_app, path="/")
-
-if __name__ == "__main__":
-    port = int(os.getenv("PORT", "7860"))
-    uvicorn.run(app, host="0.0.0.0", port=port)
