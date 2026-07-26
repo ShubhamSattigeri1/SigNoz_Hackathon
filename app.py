@@ -4,11 +4,9 @@ os.environ["GRADIO_SSR_MODE"] = "0"
 import gradio as gr
 from backend.main import app as backend_app
 
-_blocks = gr.Blocks(title="Agent-RCA Backend")
-with _blocks:
+with gr.Blocks(title="Agent-RCA Backend") as demo:
     gr.Markdown("### Agent Root-Cause Attribution")
 
-app = gr.mount_gradio_app(backend_app, _blocks, path="/")
-
-import uvicorn
-uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", "7860")))
+internal = demo.app
+for route in backend_app.routes:
+    internal.routes.append(route)
