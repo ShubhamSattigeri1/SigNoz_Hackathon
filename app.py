@@ -2,7 +2,6 @@ import os
 os.environ["GRADIO_SSR_MODE"] = "0"
 
 import threading
-import time
 import gradio as gr
 from backend.main import app as backend_app
 
@@ -15,10 +14,4 @@ demo.launch = lambda *a, **kw: None
 
 import uvicorn
 port = int(os.getenv("PORT", "7860"))
-threading.Thread(target=uvicorn.run, args=(combined,), kwargs={"host": "0.0.0.0", "port": port}, daemon=True).start()
-
-try:
-    while True:
-        time.sleep(3600)
-except KeyboardInterrupt:
-    pass
+threading.Thread(target=uvicorn.run, args=(combined,), kwargs={"host": "0.0.0.0", "port": port}).start()
