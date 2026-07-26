@@ -152,10 +152,6 @@ def diagnose_live(case_id: str):
         "used_fallback": used_fallback,
     }
 
-@app.get("/")
-def root():
-    return {"status": "ok", "service": "agent-rca-backend"}
-
 @app.get("/health")
 def health():
     return {"status": "ok"}
