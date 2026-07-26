@@ -9,6 +9,13 @@ with demo:
     gr.Markdown("### Agent Root-Cause Attribution")
     gr.Markdown("API server is running.")
 
-internal_app = demo.app  # Gradio 6.x internal FastAPI app
+internal = demo.app
 for route in backend_app.routes:
-    internal_app.routes.append(route)
+    internal.routes.append(route)
+
+if __name__ == "__main__":
+    demo.queue()
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=int(os.getenv("PORT", "7860"))
+    )
