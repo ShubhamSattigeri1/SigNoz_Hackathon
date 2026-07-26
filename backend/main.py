@@ -8,13 +8,15 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from otel import init_otel
-from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-from opentelemetry.instrumentation.requests import RequestsInstrumentor
 
 load_dotenv()
 
-init_otel()
-RequestsInstrumentor().instrument()
+try:
+    init_otel()
+    from opentelemetry.instrumentation.requests import RequestsInstrumentor
+    RequestsInstrumentor().instrument()
+except Exception:
+    pass  # OTel is optional; skip on Vercel serverless
 
 app = FastAPI(title="Agent-RCA Dashboard")
 
@@ -150,6 +152,10 @@ def diagnose_live(case_id: str):
         "used_fallback": used_fallback,
     }
 
+@app.get("/")
+def root():
+    return {"status": "ok", "service": "agent-rca-backend"}
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
@@ -158,7 +164,11 @@ def health():
 def api_health():
     return {"status": "ok"}
 
-FastAPIInstrumentor.instrument_app(app)
+try:
+    from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+    FastAPIInstrumentor.instrument_app(app)
+except Exception:
+    pass  # OTel is optional; skip on Vercel serverless
 
 if __name__ == "__main__":
     import uvicorn
