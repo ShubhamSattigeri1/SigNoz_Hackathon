@@ -3,7 +3,7 @@ import gradio as gr
 
 from backend.main import app as backend_app
 
-demo = gr.Blocks(title="Agent-RCA Backend")
+demo = gr.Blocks(title="Agent-RCA Backend", ssr_mode=False)
 
 with demo:
     gr.Markdown("### Agent Root-Cause Attribution")
@@ -15,7 +15,4 @@ for route in backend_app.routes:
 
 if __name__ == "__main__":
     demo.queue()
-    demo.launch(
-        server_name="0.0.0.0",
-        server_port=int(os.getenv("PORT", "7860"))
-    )
+    demo.launch(server_name="0.0.0.0", server_port=int(os.getenv("PORT", "7860")))
